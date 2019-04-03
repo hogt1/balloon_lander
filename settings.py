@@ -1,6 +1,6 @@
 DEBUG = True
 
-FPS = 50
+FPS = 15
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -16,7 +16,6 @@ CANNONBALL_SIZE = (20, 20)
 
 MINE_FILE = 'mine.png'
 MINE_SIZE = (50, 50)
-
 
 BACKGROUND_FILE = 'sky.png'
 

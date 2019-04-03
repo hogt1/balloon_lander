@@ -3,6 +3,7 @@ import sys
 import pygame
 from pygame.locals import *
 import settings
+import utils
 from sprites import HotAirBalloon, Cannonball, Mine
 
 clock = pygame.time.Clock()
@@ -11,8 +12,8 @@ pygame.font.init() # Initaliserer fonter
 
 pygame.key.set_repeat(10, 10)
 
-#screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE) 
-screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)) 
+screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE) 
+#screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)) 
 surface = pygame.Surface(screen.get_size())
 surface.convert()
 
@@ -59,8 +60,11 @@ while True:
 
     for cannonball in cannonballs:
         cannonball.draw(surface)
+    surface.blit(utils.debug_text('{}'.format(int(clock.get_fps()))), (0,0))
 
     screen.blit(surface, (0,0))
+ 
     pygame.display.flip()
     pygame.display.update()
     clock.tick(settings.FPS)
+ 
