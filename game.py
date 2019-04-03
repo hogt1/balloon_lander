@@ -5,9 +5,11 @@ from pygame.locals import *
 import settings
 from sprites import HotAirBalloon, Cannonball, Mine
 
+clock = pygame.time.Clock()
 pygame.init()
 pygame.font.init() # Initaliserer fonter
 
+pygame.key.set_repeat(10, 10)
 
 #screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE) 
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)) 
@@ -25,15 +27,15 @@ background.blit(pygame.transform.smoothscale(bg_img, surface.get_rect().size), (
 
 balloons = []
 for n in range(1):
-    balloons.append(HotAirBalloon(surface))
+    balloons.append(HotAirBalloon((1, 200)))
 
 cannonballs = []
 for n in range(1):
-    cannonballs.append(Cannonball(surface))
+    cannonballs.append(Cannonball((100,0)))
 
 mines = []
 for n in range(10):
-    mines.append(Mine(surface))
+    mines.append(Mine((0,0)))
 
 while True:
     pygame.event.pump()
@@ -43,21 +45,22 @@ while True:
             pygame.quit()
             sys.exit()
         elif event.type == KEYDOWN:
-            elif event.key == K_UP:
+            if event.key == K_UP:
                 for balloon in balloons:
                     balloon.burn()        
             
     surface.fill((255, 255, 255))
     surface.blit(background, (0,0))
     for mine in mines:
-        mine.draw()
+        mine.draw(surface)
         
     for balloon in balloons:
-        balloon.draw()
+        balloon.draw(surface)
 
     for cannonball in cannonballs:
-        cannonball.draw()
+        cannonball.draw(surface)
 
     screen.blit(surface, (0,0))
     pygame.display.flip()
     pygame.display.update()
+    clock.tick(settings.FPS)
