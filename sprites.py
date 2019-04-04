@@ -22,16 +22,6 @@ class BaseObject(pygame.sprite.Sprite):
         y = math.sin(rad) * self.speed
         return x, y
     
-    def direction_xy2(self):
-        # Python operere med radianer og ikke grader
-        #rad = math.radians(self.direction)
-        rad = self.direction
-        # Regner ut x og y komponenten fra vektoren "speed*direction"
-        x = math.cos(rad) * self.speed
-        y = math.sin(rad) * self.speed
-        return x, y
-    
-
     def set_direction_xy(self, x, y):
         # Kalkulerer direction ut i fra x og y. atan2 håndterer fortegn
         rad = math.atan2(y/self.speed, x/self.speed) # Vinkel i radianer
@@ -40,6 +30,10 @@ class BaseObject(pygame.sprite.Sprite):
 
 class HotAirBalloon(BaseObject):
     def __init__(self, position, direction=0, speed=1):
+        self.points = 0
+        self.level = 1
+        self.level_up = False
+        self.hit = False
         BaseObject.__init__(self, direction, speed)
         # Synkende bilde
         filename = os.path.join(settings.ASSETS_DIR, settings.HOTAIR_BALLON_FILE)
@@ -67,7 +61,7 @@ class HotAirBalloon(BaseObject):
 
 
     def update(self):
-
+        self.level_up = False
         self.direction += settings.BALLON_DESC_RATE
         if self.direction > 90:
             self.direction = 90
@@ -81,38 +75,33 @@ class HotAirBalloon(BaseObject):
             self.image = self.image_desc
         self.rect.top += dy
         self.rect.left += dx
-    
+        self.points = self.rect.left*self.level
         # Vi har landet
         if self.rect.top > (settings.SCREEN_HEIGHT - 1 - self.rect.height):
             self.rect.top = settings.SCREEN_HEIGHT - 1 - self.rect.height
+            self.hit = True
 
         # Vi flyr ut av skjermen
         if self.rect.top < 0:
             self.rect.top = 0
+            self.hit = True
 
         if self.rect.left < 0:
             self.rect.left = 0
         
         if self.rect.left > (settings.SCREEN_WIDTH -1):
             self.rect.right = 0
+            self.level += 1
+            self.speed += 0.2
 
-        # Kalkulerer direction ut i fra x og y. atan2 håndterer fortegn
-        #rad = math.atan2(y/self.speed, x/self.speed) # Vinkel i radianer
-        #self.direction = math.degrees(rad) # Kalkulerer om radianer til grader
-
-    
-    def draw(self, surface):
-        self.update()
-        surface.blit(self.image, self.rect.topleft)
+        '''
         if settings.DEBUG:
-            dx, dy = self.direction_xy()
-            #self.set_direction_xy(dx, dy)
-
-            surface.blit(
-                utils.debug_text('{:.2f} {:.2f} {}'.format(dx, dy, self.direction)),
-                (self.rect.left,self.rect.top-20))
-
-
+            draw_rect = self.rect
+            draw_rect = pygame.rect.Rect(0,0, self.rect.width-1, self.rect.height -1)
+            pygame.draw.rect(self.image, (255, 255, 255), draw_rect, 1)
+        '''
+        
+    
 class Cannonball(BaseObject):
     def __init__(self, position, direction=0, speed=0):
         BaseObject.__init__(self, direction, speed)
@@ -129,10 +118,6 @@ class Cannonball(BaseObject):
             self.rect.left = random.randint(0, settings.SCREEN_WIDTH - 1 - self.rect.width)
             self.rect.top = -self.rect.height
 
-    def draw(self, surface):
-        self.update()
-        surface.blit(self.image, self.rect.topleft)
-
 class Mine(BaseObject):
     def __init__(self, position, direction=0, speed=0):
         BaseObject.__init__(self, direction, speed)
@@ -141,16 +126,17 @@ class Mine(BaseObject):
         self.rect = self.image.get_rect()
         
         # Starter random på skjermen
-        self.rect.left = random.randint(0, settings.SCREEN_WIDTH - self.rect.width) - 1 
+        self.rect.left = random.randint(200, settings.SCREEN_WIDTH - self.rect.width) - 1 
         self.rect.top = random.randint(0, settings.SCREEN_HEIGHT  - self.rect.height)
     
     def update(self):
         pass
-
-    def draw(self, surface):
-        self.update()
-        surface.blit(self.image, self.rect.topleft)
-
+        '''
+        if settings.DEBUG:
+            draw_rect = self.rect
+            draw_rect = pygame.rect.Rect(0,0, self.rect.width-1, self.rect.height -1)
+            pygame.draw.rect(self.image, (255, 255, 255), draw_rect, 1)
+        '''
     
 
 
