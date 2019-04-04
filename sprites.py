@@ -92,7 +92,8 @@ class HotAirBalloon(BaseObject):
         if self.rect.left > (settings.SCREEN_WIDTH -1):
             self.rect.right = 0
             self.level += 1
-            self.speed += 0.2
+            self.speed += 0.3
+            self.level_up = True
 
         '''
         if settings.DEBUG:

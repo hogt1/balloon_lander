@@ -34,8 +34,17 @@ balloon.add(HotAirBalloon((1, 200)))
 #    cannonballs.append(Cannonball((100,0)))
 
 mines = pygame.sprite.Group()
+
+def add_mine():
+    mine = Mine((0,0))
+    if not pygame.sprite.spritecollideany(mine, mines):
+        mines.add(mine)
+    else:
+        add_mine()
+
+
 for n in range(10):
-    mines.add(Mine((0,0)))
+    add_mine()
 
 def display_points(points):
     font = pygame.font.SysFont('', 20)
@@ -74,8 +83,10 @@ while True:
         elif event.type == KEYDOWN:
             if event.key == K_UP:
                 balloon.sprite.burn() 
-            
-    surface.fill((255, 255, 255))
+
+    if balloon.sprite.level_up:
+        add_mine()
+                
     surface.blit(background, (0,0))
     mines.update()
     mines.draw(surface)
@@ -95,13 +106,13 @@ while True:
         game_over()
     
     # Sjekker om det er noen rect for sprite som overlapper
-    mine = pygame.sprite.spritecollideany(balloon.sprite, mines)
-    if mine:
+    mine_hit = pygame.sprite.spritecollideany(balloon.sprite, mines)
+    if mine_hit:
         # Sjekker om de overlapper på pixelnivå
         ballon_mask = pygame.mask.from_surface(balloon.sprite.image)
-        mine_mask = pygame.mask.from_surface(mine.image)
-        offset_x = mine.rect.left - balloon.sprite.rect.left
-        offset_y = mine.rect.top - balloon.sprite.rect.top
+        mine_mask = pygame.mask.from_surface(mine_hit.image)
+        offset_x = mine_hit.rect.left - balloon.sprite.rect.left
+        offset_y = mine_hit.rect.top - balloon.sprite.rect.top
         overlap = ballon_mask.overlap(mine_mask, (offset_x, offset_y))
         #print(overlap)
         if overlap:
