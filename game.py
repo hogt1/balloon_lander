@@ -6,13 +6,16 @@ import settings
 import utils
 from sprites import HotAirBalloon, Cannonball, Mine
 
-clock = pygame.time.Clock()
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+
 pygame.init()
+clock = pygame.time.Clock()
 pygame.font.init() # Initaliserer fonter
 
 pygame.key.set_repeat(10, 10)
 
-#screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE) 
+#screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN | pygame.DOUBLEBUF) 
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)) 
 surface = pygame.Surface(screen.get_size())
 surface.convert()
