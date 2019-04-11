@@ -19,6 +19,8 @@ MINE_SIZE = (50, 50)
 
 BACKGROUND_FILE = 'sky.png'
 
+SOUND_BURN_FILE = 'burn.mp3'
+
 GRAVITY = 0.6
 BALLON_DESC_RATE = 1
 WIND = 2

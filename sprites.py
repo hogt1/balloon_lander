@@ -39,6 +39,7 @@ class HotAirBalloon(BaseObject):
         filename = os.path.join(settings.ASSETS_DIR, settings.HOTAIR_BALLON_FILE)
         self.image_desc = utils.load_image(filename, settings.HOTAIR_BALLON_SIZE)
         
+        self.burn_filename = filename = os.path.join(settings.ASSETS_DIR, settings.SOUND_BURN_FILE)
         # Stigende bilde
         filename = os.path.join(settings.ASSETS_DIR, settings.HOTAIR_BALLON_BURN_FILE)
         self.image_asc = utils.load_image(filename, settings.HOTAIR_BALLON_SIZE)
@@ -52,12 +53,16 @@ class HotAirBalloon(BaseObject):
         self.speed = settings.WIND
 
         self.burn_count = 0
+        pygame.mixer.music.load(self.burn_filename)
     
     def burn(self):
         self.direction += settings.BURN
         if self.direction < -90:
             self.direction = -90
+        if not pygame.mixer.get_busy():
+            pygame.mixer.music.play(0)
         self.burn_count = 15
+
 
 
     def update(self):
@@ -73,6 +78,8 @@ class HotAirBalloon(BaseObject):
             self.burn_count -= 1
         else:
             self.image = self.image_desc
+            if pygame.mixer.get_busy():
+                pygame.mixer.stop()
         self.rect.top += dy
         self.rect.left += dx
         self.points = self.rect.left*self.level
